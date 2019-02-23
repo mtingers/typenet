@@ -11,6 +11,11 @@ TypeNet: Types distributed over a network
 python setup.py install
 ```
 
+# Types
+Supported types:
+1. List -- Acts like the default python list type
+2. Dict -- Coming soon, not yet implemented
+
 # Examples
 
 ## Server
