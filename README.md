@@ -1,5 +1,5 @@
 # TypeNet
-TypeNet: Types distributed over a network
+TypeNet: Python objects/types distributed over a network
 
 # Introduction
 1. A client/server model for storing Python objects/types across a network.
