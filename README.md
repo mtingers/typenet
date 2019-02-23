@@ -9,11 +9,11 @@ NOTE: A mix of python2 and python3 servers are compatible and can be run togethe
 
 ```bash
 # Launch server 1
-user@node01:~$ typenet-server.py 0.0.0.0 4444
+user@node01:~$ typenet-server 0.0.0.0 4444
 ```
 ```bash
 # Launch server 2
-user@node02:~$ typenet-server.py 0.0.0.0 4445
+user@node02:~$ typenet-server 0.0.0.0 4445
 ```
 
 ## Client
