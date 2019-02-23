@@ -5,13 +5,13 @@
 #
 
 import sys
-from server import TypeNetServer
+from .server import TypeNetServer
 
 def usage():
     print('%s <listen-host> <listen-port>' % (sys.argv[0]))
     sys.exit(1)
 
-if __name__ == '__main__':
+def main():
     if len(sys.argv) != 3:
         usage()
 
@@ -20,4 +20,7 @@ if __name__ == '__main__':
 
     server = TypeNetServer(host, port)
     server.run()
+
+if __name__ == '__main__':
+    main()
 

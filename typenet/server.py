@@ -2,7 +2,7 @@ import pickle
 import socket
 import select
 from pprint import pprint
-from util import send_msg, recv_msg
+from .util import send_msg, recv_msg
 
 class TypeNetServer(object):
     def __init__(self, host, port):
