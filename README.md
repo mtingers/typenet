@@ -58,4 +58,4 @@ del(li[0])      # -> typenet.types.UnsupportedDelete: List only supports deletio
 6. Servers are subject to pickle attacks. Items #1 and $5 will help improve security in the future.
 7. Servers currently accept any connections and connections are not encrypted. Do not use on an open network in the current state.
 8. It is not recommended to write to TypeNet servers from multiple locations/processes/threads at this time unless you do your own coordination.
-
+9. Add dict type
