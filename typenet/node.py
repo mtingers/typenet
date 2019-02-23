@@ -77,4 +77,6 @@ class Node(object):
         if reply['s'] != 1:
             raise reply['r']
 
+    def debug_info(self):
+        return  'Node(name=%s, host=%s:%s, len=%d)' % (self.name, self.host, self.port, self.__len__())
 

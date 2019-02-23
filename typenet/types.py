@@ -151,3 +151,9 @@ class List(object):
         if self.p_offset <= self.count:
             self._extend()
 
+    def node_debug(self):
+        out = '---- node info ----\n'
+        for i in self.nodes:
+            out += i.debug_info()
+            out += '\n'
+        return out.strip()
