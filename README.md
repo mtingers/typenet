@@ -78,7 +78,7 @@ Node(name=list-test, host=node02:4445, len=5000)
 # TODO and Known Issues
 
 ## TODO
-1. Add SSL support with authentication.
+1. Add TLS/SSL support with authentication.
 2. Add server config file.
 3. Add server module import list. For example, class Foo() cannot be pickled across the network unless the servers import the same Foo on startup.
 4. Add systemd init scripts.
