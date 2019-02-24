@@ -77,6 +77,16 @@ class Node(object):
         if reply['s'] != 1:
             raise reply['r']
 
+    def __contains__(self, v):
+        s = self._connect()
+        msg = pickle.dumps({'o':'contains', 'x':v, 'n':self.name}, protocol=2)
+        send_msg(s, msg)
+        reply = recv_msg(s)
+        reply = pickle.loads(reply) #, encoding='latin1')
+        if reply['s'] != 1:
+            raise reply['r']
+        return reply['v']
+
     def debug_info(self):
         return  'Node(name=%s, host=%s:%s, len=%d)' % (self.name, self.host, self.port, self.__len__())
 

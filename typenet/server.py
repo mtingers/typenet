@@ -38,6 +38,11 @@ class TypeNetServer(object):
                 reply['v'] = self.nodes[node_name][msg['x']]
             elif msg['o'] == 'len':
                 reply['v'] = len(self.nodes[node_name])
+            elif msg['o'] == 'contains':
+                if msg['x'] in self.nodes[node_name]:
+                    reply['v'] = True
+                else:
+                    reply['v'] = False
             else:
                 print('Unknown msg: %s' % (msg))
         except Exception as e:

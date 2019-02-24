@@ -134,6 +134,12 @@ class List(object):
     def __iter__(self):
         return self
 
+    def __contains__(self, v):
+        for node in self.nodes:
+            if v in node:
+                return True
+        return False
+
     def __next__(self):
         if self.iter_i > self.count-1:
             self.iter_i = 0
