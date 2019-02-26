@@ -30,62 +30,37 @@ class Node(object):
                 time.sleep(0.33)
             tries += 1
 
-    def __len__(self):
+    def _send_msg(self, msg):
         s = self._connect()
-        msg = pickle.dumps({'o':'len', 'n':self.name}, protocol=2)
+        msg = pickle.dumps(msg, protocol=2)
         send_msg(s, msg)
         reply = recv_msg(s)
         reply = pickle.loads(reply) #, encoding='latin1')
         if reply['s'] != 1:
             raise reply['r']
-        return reply['v']
+        if 'v' in reply:
+            return reply['v']
+
+    def __len__(self):
+        return self._send_msg({'o':'len', 'n':self.name})
+
+    def append_bulk(self, items):
+        return self._send_msg({'o':'append_bulk', 'x':items, 'n':self.name})
 
     def append(self, item):
-        s = self._connect()
-        msg = pickle.dumps({'o':'append', 'x':item, 'n':self.name}, protocol=2)
-        send_msg(s, msg)
-        reply = recv_msg(s)
-        reply = pickle.loads(reply) #, encoding='latin1')
-        if reply['s'] != 1:
-            raise reply['r']
+        return self._send_msg({'o':'append', 'x':item, 'n':self.name})
 
     def __getitem__(self, i):
-        s = self._connect()
-        msg = pickle.dumps({'o':'get', 'x':i, 'n':self.name}, protocol=2)
-        send_msg(s, msg)
-        reply = recv_msg(s)
-        reply = pickle.loads(reply) #, encoding='latin1')
-        if reply['s'] != 1:
-            raise reply['r']
-        return reply['v']
+        return self._send_msg({'o':'get', 'x':i, 'n':self.name})
 
     def __delitem__(self, i):
-        s = self._connect()
-        msg = pickle.dumps({'o':'delete', 'x':i, 'n':self.name}, protocol=2)
-        send_msg(s, msg)
-        reply = recv_msg(s)
-        reply = pickle.loads(reply) #, encoding='latin1')
-        if reply['s'] != 1:
-            raise reply['r']
+        return self._send_msg({'o':'delete', 'x':i, 'n':self.name})
 
     def __setitem__(self, i, val):
-        s = self._connect()
-        msg = pickle.dumps({'o':'set', 'x':i, 'v':val, 'n':self.name}, protocol=2)
-        send_msg(s, msg)
-        reply = recv_msg(s)
-        reply = pickle.loads(reply) #, encoding='latin1')
-        if reply['s'] != 1:
-            raise reply['r']
+        return self._send_msg({'o':'set', 'x':i, 'v':val, 'n':self.name})
 
     def __contains__(self, v):
-        s = self._connect()
-        msg = pickle.dumps({'o':'contains', 'x':v, 'n':self.name}, protocol=2)
-        send_msg(s, msg)
-        reply = recv_msg(s)
-        reply = pickle.loads(reply) #, encoding='latin1')
-        if reply['s'] != 1:
-            raise reply['r']
-        return reply['v']
+        return self._send_msg({'o':'contains', 'x':v, 'n':self.name})
 
     def debug_info(self):
         return  'Node(name=%s, host=%s:%s, len=%d)' % (self.name, self.host, self.port, self.__len__())

@@ -49,9 +49,12 @@ class List(object):
                 self.partitions[node].append((self.p_offset, (self.p_offset+self.partition_split)-1))
                 self.p_offset += self.partition_split
 
-    def _index_to_node(self, index):
+    def _index_to_node(self, index, override_count=None):
         if index < 0:
-            index = (self.count + index)
+            if override_count:
+                index = (override_count + index)
+            else:
+                index = (self.count + index)
         offset = 0
         index = int(index)
         for node, p in self.partitions.items():
@@ -149,6 +152,28 @@ class List(object):
 
     def next(self):
         return self.__next__()
+
+    def append_bulk(self, items):
+        # Get all the nodes for each chunk of items
+        # since items may overflow the partition if too large or
+        # on the border
+        nodes = {}
+        prev_node = -1
+        for i in range(len(items)):
+            node = self._index_to_node(self.count+i) #, override_count=self.count+i)
+            if not node in nodes:
+                nodes[node] = []
+            if node != prev_node:
+                nodes[node].append({'start':i, 'end':i+1})
+            nodes[node][-1]['end'] = i+1
+            prev_node = node
+
+        for node, s in nodes.items():
+            for ss in s:
+                self.nodes[node].append_bulk(items[ss['start']:ss['end']])
+                self.count += ss['end'] - ss['start']
+                if self.p_offset <= self.count:
+                    self._extend()
 
     def append(self, item):
         node = self._index_to_node(self.count)

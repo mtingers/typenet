@@ -30,6 +30,8 @@ class TypeNetServer(object):
         try:
             if msg['o'] == 'append':
                 self.nodes[node_name].append(msg['x'])
+            elif msg['o'] == 'append_bulk':
+                self.nodes[node_name] += msg['x']
             elif msg['o'] == 'delete':
                 del(self.nodes[node_name][msg['x']])
             elif msg['o'] == 'set':
@@ -44,7 +46,7 @@ class TypeNetServer(object):
                 else:
                     reply['v'] = False
             else:
-                print('Unknown msg: %s' % (msg))
+                print('Unknown msg type: %s' % (msg))
         except Exception as e:
             print('ERROR: %s' % (e))
             print('----debug----')
