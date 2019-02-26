@@ -87,6 +87,17 @@ big_list = [1]*10000000
 li.append_bulk(big_list)
 ```
 
+Locking:
+```python
+
+# Start a lock, this will block if already locked
+li.lock()
+li.append(123)
+# Release the lock, allowing other local threads and other network clients to access the object.
+li.unlock()
+```
+
+
 # TODO and Known Issues
 
 ## TODO
