@@ -80,6 +80,13 @@ Node(name=list-test, host=node01:4444, len=5000)
 Node(name=list-test, host=node02:4445, len=5000)
 ```
 
+Bulk append to list. This method reduces the number of network calls and can significantly improve performance:
+```python
+
+big_list = [1]*10000000
+li.append_bulk(big_list)
+```
+
 # TODO and Known Issues
 
 ## TODO
