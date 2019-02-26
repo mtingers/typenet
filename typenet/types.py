@@ -1,5 +1,6 @@
-
 from .node import Node
+from threading import Lock
+from time import sleep
 
 class NoIndexNode(Exception):
     pass
@@ -42,6 +43,7 @@ class List(object):
         self.iter_i = 0
         if self.p_offset <= self.count:
             self._extend()
+        self._lock = Lock()
 
     def _extend(self):
         for i in range(20):
@@ -192,3 +194,23 @@ class List(object):
             out += i.debug_info()
             out += '\n'
         return out.strip()
+
+    # Provides a means for thread/process safety
+    # This is actually multiple layers of locks
+    # One local thread lock, one remote lock
+    # The first node in the list acts as the lock server
+    def lock(self):
+        self._lock.acquire()
+        # This is a remote spin lock
+        while 1:
+            status = self.nodes[0].lock()
+            if status is True:
+                break
+            sleep(0.066)
+
+    def unlock(self):
+        self._lock.release()
+        status = self.nodes[0].unlock()
+        if status is False:
+            print('WARNING: node unlock() call returned False. Something else unlocked it!')
+

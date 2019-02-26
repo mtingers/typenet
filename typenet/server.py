@@ -14,6 +14,7 @@ class TypeNetServer(object):
         self.s.bind((host, port))
         self.s.listen(16)
         self.nodes = {}
+        self.node_locks = {}
         self.clients = []
         self.inputs = [self.s]
         self.outputs = []
@@ -25,6 +26,7 @@ class TypeNetServer(object):
         node_name = msg['n']
         if not node_name in self.nodes:
             self.nodes[node_name] = []
+            self.node_locks[node_name] = False
 
         reply = {'s':1,}
         try:
@@ -40,6 +42,16 @@ class TypeNetServer(object):
                 reply['v'] = self.nodes[node_name][msg['x']]
             elif msg['o'] == 'len':
                 reply['v'] = len(self.nodes[node_name])
+            elif msg['o'] == 'lock':
+                reply['v'] = (not self.node_locks[node_name])
+                self.node_locks[node_name] = True
+            elif msg['o'] == 'unlock':
+                if self.node_locks[node_name] is False:
+                    reply['v'] = False
+                else:
+                    reply['v'] = True
+                self.node_locks[node_name] = False
+
             elif msg['o'] == 'contains':
                 if msg['x'] in self.nodes[node_name]:
                     reply['v'] = True

@@ -62,6 +62,12 @@ class Node(object):
     def __contains__(self, v):
         return self._send_msg({'o':'contains', 'x':v, 'n':self.name})
 
+    def lock(self):
+        return self._send_msg({'o':'lock', 'n':self.name})
+
+    def unlock(self):
+        return self._send_msg({'o':'unlock', 'n':self.name})
+
     def debug_info(self):
         return  'Node(name=%s, host=%s:%s, len=%d)' % (self.name, self.host, self.port, self.__len__())
 
