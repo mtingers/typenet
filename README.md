@@ -84,7 +84,9 @@ Bulk append to list. This method reduces the number of network calls and can sig
 ```python
 
 big_list = [1]*10000000
-li.append_bulk(big_list)
+li.extend(big_list)
+# or
+li += big_list
 ```
 
 Locking:

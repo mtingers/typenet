@@ -42,10 +42,10 @@ class List(object):
             self.count += len(node)
         self.iter_i = 0
         if self.p_offset <= self.count:
-            self._extend()
+            self._extend_partitions()
         self._lock = Lock()
 
-    def _extend(self):
+    def _extend_partitions(self):
         for i in range(20):
             for node in range(len(self.nodes)):
                 self.partitions[node].append((self.p_offset, (self.p_offset+self.partition_split)-1))
@@ -155,7 +155,13 @@ class List(object):
     def next(self):
         return self.__next__()
 
-    def append_bulk(self, items):
+    def __radd__(self, i):
+        return self.__add__(i)
+
+    def __add__(self, i):
+        return self.extend(i)
+
+    def extend(self, items):
         # Get all the nodes for each chunk of items
         # since items may overflow the partition if too large or
         # on the border
@@ -165,7 +171,7 @@ class List(object):
 
         # Extend the partitions to handle this bulk append
         while self.p_offset <= c+len(items):
-            self._extend()
+            self._extend_partitions()
 
         for i in range(len(items)):
             node = self._index_to_node(self.count+i) #, override_count=self.count+i)
@@ -178,15 +184,16 @@ class List(object):
 
         for node, s in nodes.items():
             for ss in s:
-                self.nodes[node].append_bulk(items[ss['start']:ss['end']])
+                self.nodes[node].extend(items[ss['start']:ss['end']])
                 self.count += ss['end'] - ss['start']
+        return self
 
     def append(self, item):
         node = self._index_to_node(self.count)
         self.nodes[node].append(item)
         self.count += 1
         if self.p_offset <= self.count:
-            self._extend()
+            self._extend_partitions()
 
     def node_debug(self):
         out = '---- node info ----\n'

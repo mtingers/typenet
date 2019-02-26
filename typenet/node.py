@@ -44,8 +44,15 @@ class Node(object):
     def __len__(self):
         return self._send_msg({'o':'len', 'n':self.name})
 
-    def append_bulk(self, items):
-        return self._send_msg({'o':'append_bulk', 'x':items, 'n':self.name})
+    def __radd__(self, i):
+        return self.__add__(i)
+
+    def __add__(self, i):
+        return self.extend(i)
+
+    def extend(self, items):
+        self._send_msg({'o':'extend', 'x':items, 'n':self.name})
+        return self
 
     def append(self, item):
         return self._send_msg({'o':'append', 'x':item, 'n':self.name})

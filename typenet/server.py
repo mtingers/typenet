@@ -32,7 +32,7 @@ class TypeNetServer(object):
         try:
             if msg['o'] == 'append':
                 self.nodes[node_name].append(msg['x'])
-            elif msg['o'] == 'append_bulk':
+            elif msg['o'] == 'extend':
                 self.nodes[node_name] += msg['x']
             elif msg['o'] == 'delete':
                 del(self.nodes[node_name][msg['x']])
