@@ -159,6 +159,12 @@ class List(object):
         # on the border
         nodes = {}
         prev_node = -1
+        c = self.count
+
+        # Extend the partitions to handle this bulk append
+        while self.p_offset <= c+len(items):
+            self._extend()
+
         for i in range(len(items)):
             node = self._index_to_node(self.count+i) #, override_count=self.count+i)
             if not node in nodes:
@@ -172,8 +178,6 @@ class List(object):
             for ss in s:
                 self.nodes[node].append_bulk(items[ss['start']:ss['end']])
                 self.count += ss['end'] - ss['start']
-                if self.p_offset <= self.count:
-                    self._extend()
 
     def append(self, item):
         node = self._index_to_node(self.count)
