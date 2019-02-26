@@ -207,6 +207,7 @@ class List(object):
             if status is True:
                 break
             sleep(0.066)
+        self.__len__()
 
     def unlock(self):
         self._lock.release()
